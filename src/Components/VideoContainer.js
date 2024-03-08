@@ -31,9 +31,7 @@ function VideoContainer() {
   //   //console.log(json.items);
   //   setVideos(json?.items || []);
   // };
-  if (videos.length === 0) {
-    return <ShimmerVideoCardList />;
-  }
+
   return (
     <div className="flex flex-wrap justify-between">
       {videos.map((video) => (
