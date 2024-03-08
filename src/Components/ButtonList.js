@@ -13,6 +13,11 @@ function ButtonList() {
       <Button name="Satsang" />
       <Button name="Music Musicles" />
       <Button name="Bhajan Music" />
+      <Button name="Mixes" />
+      <Button name="Satsang" />
+      <Button name="Bhajan Music" />
+      <Button name="Live" />
+      <Button name="Dat Structure" />
     </div>
   );
 }

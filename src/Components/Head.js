@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { useDispatch } from "react-redux";
-import { toggleMenue } from "../Utils/appSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getSearchQuery, toggleMenue } from "../Utils/appSlice";
 import { YOUTUBE_SEARCH_API } from "../Utils/constants";
+import { cacheResults } from "../Utils/searchSlice";
 
 function Head() {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchCache = useSelector((store) => store.search);
 
   useEffect(() => {
-    const timer = setTimeout(() => getSearchSuggestions(), 200);
+    const timer = setTimeout(() => {
+      if (searchCache[searchQuery]) {
+        setSuggestions(searchCache[searchQuery]);
+      } else {
+        getSearchSuggestions();
+      }
+    }, 200);
+
     return () => {
       clearTimeout(timer);
     };
@@ -18,13 +29,20 @@ function Head() {
   const getSearchSuggestions = async () => {
     const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
     const json = await data.json();
-    console.log(json[1]);
+    setSuggestions(json[1]);
+    dispatch(
+      cacheResults({
+        [searchQuery]: json[1],
+      })
+    );
   };
 
   const toggleMenueHandler = () => {
     dispatch(toggleMenue());
   };
-
+  const handleSuggestion = (s) => {
+    dispatch(getSearchQuery(s));
+  };
   return (
     <div className="flex justify-between m-2 p-2 shadow-md">
       <div className="flex gap-5">
@@ -40,44 +58,42 @@ function Head() {
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Logo_of_YouTube_%282015-2017%29.svg/2560px-Logo_of_YouTube_%282015-2017%29.svg.png"
         />
       </div>
-      <div>
-        <div className="flex w-full justify-center">
-          <input
-            className="w-1/2 h-8 rounded-l-full border border-gray-500 p-4"
-            type="text"
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button className="text-black bg-gray-300  px-3 border border-gray-500 rounded-r-full">
-            <SearchIcon />
-          </button>
 
-          <div className="fixed bg-white p-2 w-[37rem]">
-            <ul>
-              <li>
-                <SearchIcon /> Iphone
-              </li>
-              <li>
-                <SearchIcon />
-                Iphone pro max
-              </li>
-              <li>
-                <SearchIcon />
-                Iphone
-              </li>
-              <li>
-                <SearchIcon />
-                Iphone
-              </li>
-              <li>
-                <SearchIcon />
-                Iphone
-              </li>
-            </ul>
+      <div>
+        <div className="justify-center">
+          <div className="flex justify-center">
+            <input
+              className="w-[32rem] h-10 rounded-l-full border border-gray-500 p-4"
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setShowSuggestions(false)}
+            />
+            <button className="text-black bg-gray-300  px-4 border border-gray-500 rounded-r-full">
+              <SearchIcon />
+            </button>
           </div>
+
+          {showSuggestions && (
+            <div className="absolute rounded-xl z-10 bg-white p-5 w-[32rem] ">
+              <ul className="w-full space-y-3 ">
+                {suggestions.map((s, index) => (
+                  <li
+                    onClick={() => handleSuggestion(s)}
+                    key={index}
+                    className="space-x-1 hover:bg-gray-200  cursor-pointer"
+                  >
+                    <SearchIcon /> {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
+
       <div>
         <img
           className="h-8 w-8"

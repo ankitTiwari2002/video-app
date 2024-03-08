@@ -16,7 +16,7 @@ function SideBar() {
   const isMenueOpen = useSelector((store) => store.app.isMenueOpen);
   if (!isMenueOpen) return null;
   return (
-    <div className="w-60 px-4 py-5 text-lg font-normal">
+    <div className="w-60 px-4 py-5 text-lg font-normal absolute bg-white z-10">
       <ul className="space-y-4">
         <li className="flex gap-4">
           <Link to={"/"}>
