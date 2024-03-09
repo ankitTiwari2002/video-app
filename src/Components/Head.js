@@ -40,9 +40,7 @@ function Head() {
   const toggleMenueHandler = () => {
     dispatch(toggleMenue());
   };
-  const handleSuggestion = (s) => {
-    dispatch(getSearchQuery(s));
-  };
+
   return (
     <div className="flex justify-between m-2 p-2 shadow-md">
       <div className="flex gap-5">
@@ -61,7 +59,13 @@ function Head() {
 
       <div>
         <div className="justify-center">
-          <div className="flex justify-center">
+          <form
+            className="flex justify-center"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(getSearchQuery(searchQuery));
+            }}
+          >
             <input
               className="w-[32rem] h-10 rounded-l-full border border-gray-500 p-4"
               type="text"
@@ -74,15 +78,15 @@ function Head() {
             <button className="text-black bg-gray-300  px-4 border border-gray-500 rounded-r-full">
               <SearchIcon />
             </button>
-          </div>
+          </form>
 
           {showSuggestions && (
             <div className="absolute rounded-xl z-10 bg-white p-5 w-[32rem] ">
               <ul className="w-full space-y-3 ">
                 {suggestions.map((s, index) => (
                   <li
-                    onClick={() => handleSuggestion(s)}
                     key={index}
+                    onClick={(e) => setSearchQuery(e.target.value)}
                     className="space-x-1 hover:bg-gray-200  cursor-pointer"
                   >
                     <SearchIcon /> {s}

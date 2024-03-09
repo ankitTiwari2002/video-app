@@ -46,6 +46,7 @@ const LIveChat = () => {
           className="w-80 bg-slate-200 rounded-full p-2 px-4"
           value={liveMessage}
           onChange={(e) => setLiveMessage(e.target.value)}
+          placeholder="Chat..."
         />
         <button className="bg-green-200 ml-6 px-3 py-1 rounded-full">
           Send
