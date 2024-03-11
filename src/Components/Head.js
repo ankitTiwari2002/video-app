@@ -64,6 +64,7 @@ function Head() {
             onClick={(e) => {
               e.preventDefault();
               dispatch(getSearchQuery(searchQuery));
+              setSearchQuery("");
             }}
           >
             <input
@@ -81,12 +82,11 @@ function Head() {
           </form>
 
           {showSuggestions && (
-            <div className="absolute rounded-xl z-10 bg-white p-5 w-[32rem] ">
-              <ul className="w-full space-y-3 ">
+            <div className="absolute rounded-xl z-20 bg-white p-5 w-[32rem] ">
+              <ul className="w-full space-y-3 rounded-xl ">
                 {suggestions.map((s, index) => (
                   <li
                     key={index}
-                    onClick={(e) => setSearchQuery(e.target.value)}
                     className="space-x-1 hover:bg-gray-200  cursor-pointer"
                   >
                     <SearchIcon /> {s}

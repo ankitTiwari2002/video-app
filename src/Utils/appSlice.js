@@ -15,7 +15,6 @@ const appSlice = createSlice({
     },
     getSearchQuery: (state, action) => {
       state.query = action.payload;
-      console.log(state.query);
     },
   },
 });
